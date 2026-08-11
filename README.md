@@ -1,34 +1,81 @@
-# 📓 Spring Boot Journal Application
+# 📓 Spring Boot Journal Application (Backend REST API)
 
-A full-featured, secure backend REST API for a personal journaling platform built with **Java** and **Spring Boot**. The system enables users to create, manage, and analyze daily journal entries with robust authentication, role-based security, caching, and background services.
+A clean, production-oriented RESTful API for a personal journaling platform built with **Java 17**, **Spring Boot**, and **MongoDB**. 
 
----
-
-## 🛠️ Tech Stack & Concepts Covered
-
-- **Core Framework:** Java 17+, Spring Boot, Spring MVC
-- **Database & Data Access:** MongoDB, Spring Data MongoDB
-- **Security & Auth:** Spring Security, JWT (JSON Web Tokens), BCrypt Password Hashing, RBAC (User / Admin roles)
-- **Caching & Performance:** Redis, Spring Cache
-- **Third-Party Integrations:** Weather API Integration, Java Mail Sender
-- **Testing & Tools:** JUnit 5, Mockito, Postman, Logback / SLF4J Logging
+This repository currently reflects **Phase 1** of development, focusing on foundational REST architecture, modular layer separation, and non-relational database persistence.
 
 ---
 
-## ✨ Key Features
+## 🛠️ Tech Stack (Phase 1)
 
-- **User Authentication & Authorization:** Secure registration and stateless authentication using JWT tokens and role management.
-- **Journal CRUD Operations:** Full REST API endpoints allowing users to create, read, update, and delete journal entries attached to their profiles.
-- **External API Consumption:** Integration with third-party Weather APIs to auto-enrich journal entries based on local weather conditions.
-- **Automated Email Notifications:** Scheduled background jobs using Spring Scheduler to dispatch email notifications and summaries.
-- **Optimized Performance:** In-memory Redis caching implemented for fast session and data retrieval.
+* **Language:** Java 17+
+* **Framework:** Spring Boot 3.x (Spring MVC)
+* **Database:** MongoDB (Spring Data MongoDB)
+* **Build Tool:** Maven
+* **API Testing:** Postman
+
+---
+
+## 🏗️ Architecture & Layering Strategy
+
+The application follows a strict separation of concerns to maintain code readability and unit testability:
+
+* `Controller Layer`: Exposes REST endpoints, handles HTTP requests, and returns JSON responses.
+* `Service Layer`: Encapsulates core business logic and transaction processing.
+* `Repository Layer`: Interfaces with MongoDB via `MongoRepository` for dynamic database queries.
+* `Model Layer`: Defines POJOs/Entities mapped directly to MongoDB collections.
+
+---
+
+## 🚀 Key Features Implemented
+
+- [x] **Full CRUD Operations:** Create, retrieve, update, and delete journal entries and user profiles.
+- [x] **MongoDB Integration:** Persistent document storage using Spring Data MongoDB.
+- [x] **Clean Error Handling:** Standardized HTTP response codes (`200 OK`, `201 Created`, `404 Not Found`, etc.).
+
+---
+
+## 🗺️ Project Roadmap
+
+- [x] **Phase 1:** Core REST API & Spring Data MongoDB Integration
+- [ ] **Phase 2:** User Authentication & Stateless Security using **Spring Security & JWT**
+- [ ] **Phase 3:** Performance optimization with **Redis Caching**
+- [ ] **Phase 4:** Third-party integrations (**Weather API** auto-enrichment & **Spring Mail** notifications)
 
 ---
 
 ## ⚙️ Getting Started
 
 ### Prerequisites
-- JDK 17 or higher
-- MongoDB (Local instance or MongoDB Atlas)
-- Redis Server
-- Maven
+* JDK 17 or higher
+* Maven 3.8+
+* MongoDB running locally (Port 27017) or a MongoDB Atlas Cluster connection URI
+
+### Installation & Local Setup
+
+1. **Clone the repository:**
+   git clone https://github.com/YOUR_GITHUB_USERNAME/journal-app.git
+   cd journal-app
+
+2. **Configure Database Connection:**
+   Update your `src/main/resources/application.properties` file with your local or cloud MongoDB connection details:
+   spring.data.mongodb.uri=mongodb://localhost:27017/journaldb
+   spring.data.mongodb.auto-index-creation=true
+
+3. **Build and Run:**
+   mvn clean package
+   mvn spring-boot:run
+
+   The application will start on http://localhost:8080.
+
+---
+
+## 🧪 Sample API Endpoints
+
+| Method | Endpoint | Description |
+| :--- | :--- | :--- |
+| `GET` | `/journal` | Fetch all journal entries |
+| `POST` | `/journal` | Create a new journal entry |
+| `GET` | `/journal/id/{myId}` | Fetch a specific entry by ID |
+| `DELETE` | `/journal/id/{myId}` | Delete an entry by ID |
+| `PUT` | `/journal/id/{myId}` | Update an existing entry |
