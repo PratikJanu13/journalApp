@@ -26,6 +26,10 @@ public class JournalEntryService {
         user.getJournalEntries().add(saved);
         userservice.saveEntry(user);
     }
+    //method overloading to save without username (for updating journal entry)
+    public void saveEntry(JournalEntry journalEntry){
+        journalEntryRepository.save(journalEntry);
+    }
 
     public List<JournalEntry> getAll(){
         return journalEntryRepository.findAll();
@@ -35,8 +39,11 @@ public class JournalEntryService {
         return journalEntryRepository.findById(id);
     }
 
-    public void deleteById(ObjectId id){
-        journalEntryRepository.deleteById(id);
+    public void deleteById(ObjectId id, String username){
+        User user = userservice.findByUserName(username);
+        user.getJournalEntries().removeIf(x -> x.getId().equals(id)); //woh wali journal entry remove where the id matches
+        userservice.saveEntry(user); //user saved with new journal entries
+        journalEntryRepository.deleteById(id); //journal entry deleted
     }
 
 
