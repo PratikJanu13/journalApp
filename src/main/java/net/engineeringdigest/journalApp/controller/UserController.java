@@ -1,11 +1,14 @@
 package net.engineeringdigest.journalApp.controller;
 
 import net.engineeringdigest.journalApp.entity.User;
+import net.engineeringdigest.journalApp.repository.UserRepository;
 import net.engineeringdigest.journalApp.service.UserService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -18,25 +21,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public List<User> getAllUsers(){
-        return userService.getAll();
-    }
-    @PostMapping
-    public void createUser(@RequestBody User user){
-        userService.saveEntry(user);
-    }
+    @Autowired
+    private UserRepository userRepository;
 
-    @PutMapping("/{username}") //we get username and pass from req body and update with the help of it
-    public ResponseEntity<?> updateUser(@RequestBody User user, @PathVariable String username){
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody User user){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //when a user is authenticated, its authentication details gets saved in this
+        String username = authentication.getName(); //no need of password as it is already authorized if reached here
+
         User userInDB = userService.findByUserName(username);
-        if(userInDB != null){
-            userInDB.setUsername(user.getUsername());
-            userInDB.setPassword(user.getPassword());
-            userService.saveEntry(userInDB);
-        }
+        userInDB.setUsername(user.getUsername());
+        userInDB.setPassword(user.getPassword());
+        userService.saveEntry(userInDB);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
+    @DeleteMapping
+    public ResponseEntity<?> deleteUserById(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication(); //when a user is authenticated, its authentication details gets saved in this
+        userRepository.deleteByUsername(authentication.getName());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

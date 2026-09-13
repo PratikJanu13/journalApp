@@ -25,4 +25,5 @@ public class User {
 
     @DBRef //this will keep a reference of journal entries(journal_entries, ID)
     private List<JournalEntry> journalEntries = new ArrayList<>();
+    private List<String> roles;
 }
